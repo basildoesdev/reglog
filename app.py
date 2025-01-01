@@ -44,9 +44,11 @@ def login():
     if user:
         return jsonify({"message": "Login successful!"}), 200
     else:
-        return jsonify({"error": "Invalid username or password."}), 401
-    finally:
-        conn.close()
+        try:
+            conn.close()
+        finally:
+            return jsonify({"error": "Invalid username or password."}), 401
+        
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
