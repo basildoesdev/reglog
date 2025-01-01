@@ -3,7 +3,7 @@ import hashlib
 
 def register_user(username, password, email):
     try:
-        conn = sqlite3.connect('./db/users.db')
+        conn = sqlite3.connect('../db/users.db')
         cursor = conn.cursor()
 
         # Hash the password for security

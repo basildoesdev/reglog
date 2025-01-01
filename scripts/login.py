@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 
 def login_user(username, password):
-    conn = sqlite3.connect('./db/users.db')
+    conn = sqlite3.connect('../db/users.db')
     cursor = conn.cursor()
 
     # Hash the input password
