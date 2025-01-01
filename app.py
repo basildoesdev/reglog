@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify,  render_template
 import sqlite3
 import hashlib
@@ -5,6 +6,31 @@ import hashlib
 app = Flask(__name__)
 
 # Register endpoint
+
+DB_PATH = 'db/users.db'
+
+# Ensure the database and table are created
+def initialize_db():
+    if not os.path.exists('db'):
+        os.makedirs('db')  # Create the 'db' directory if it doesn't exist
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    # Create the 'users' table if it does not exist
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL
+    )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Initialize the database at app startup
+initialize_db()
 
 @app.route('/')
 def home():
