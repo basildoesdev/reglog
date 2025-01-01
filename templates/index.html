@@ -25,32 +25,48 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        #userDetails {
+            margin-top: 1em;
+        }
+        #logoutButton {
+            margin-top: 1em;
+        }
     </style>
 </head>
 <body>
     <h1>Login and Registration</h1>
 
     <!-- Registration Form -->
-    <h2>Register</h2>
-    <form id="registerForm">
-        <input type="text" id="regUsername" placeholder="Username" required />
-        <input type="email" id="regEmail" placeholder="Email" required />
-        <input type="password" id="regPassword" placeholder="Password" required />
-        <button type="submit">Register</button>
-    </form>
-    <div id="registerResponse"></div>
+    <div id="registerFormDiv">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" id="regUsername" placeholder="Username" required />
+            <input type="email" id="regEmail" placeholder="Email" required />
+            <input type="password" id="regPassword" placeholder="Password" required />
+            <button type="submit">Register</button>
+        </form>
+        <div id="registerResponse"></div>
+    </div>
 
     <!-- Login Form -->
-    <h2>Login</h2>
-    <form id="loginForm">
-        <input type="text" id="loginUsername" placeholder="Username" required />
-        <input type="password" id="loginPassword" placeholder="Password" required />
-        <button type="submit">Login</button>
-    </form>
-    <div id="loginResponse"></div>
+    <div id="loginFormDiv">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="Username" required />
+            <input type="password" id="loginPassword" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+        <div id="loginResponse"></div>
+    </div>
+
+    <!-- User Details & Logout -->
+    <div id="userDetails" style="display: none;">
+        <p>Welcome, <span id="usernameDisplay"></span>!</p>
+        <button id="logoutButton">Logout</button>
+    </div>
 
     <script>
-        const API_BASE_URL = "https://reglog-7lew.onrender.com/";
+        const API_BASE_URL = "https://your-render-app-url.com";
 
         // Handle Registration
         document.getElementById("registerForm").addEventListener("submit", async (e) => {
@@ -85,11 +101,49 @@
                     body: JSON.stringify({ username, password }),
                 });
                 const result = await response.json();
+                if (result.message) {
+                    // If login successful, store the username and show user details
+                    sessionStorage.setItem("loggedInUser", username);
+                    displayLoggedInUser(username);
+                }
                 document.getElementById("loginResponse").innerText = result.message || result.error;
             } catch (err) {
                 document.getElementById("loginResponse").innerText = "An error occurred.";
             }
         });
+
+        // Handle Logout
+        document.getElementById("logoutButton").addEventListener("click", () => {
+            sessionStorage.removeItem("loggedInUser");
+            displayLoggedOut();
+        });
+
+        // Display logged-in user
+        function displayLoggedInUser(username) {
+            document.getElementById("registerFormDiv").style.display = 'none';
+            document.getElementById("loginFormDiv").style.display = 'none';
+            document.getElementById("userDetails").style.display = 'block';
+            document.getElementById("usernameDisplay").innerText = username;
+        }
+
+        // Display logged-out state
+        function displayLoggedOut() {
+            document.getElementById("registerFormDiv").style.display = 'block';
+            document.getElementById("loginFormDiv").style.display = 'block';
+            document.getElementById("userDetails").style.display = 'none';
+            document.getElementById("loginResponse").innerText = '';
+            document.getElementById("registerResponse").innerText = '';
+        }
+
+        // Check if user is already logged in on page load
+        window.onload = () => {
+            const loggedInUser = sessionStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                displayLoggedInUser(loggedInUser);
+            } else {
+                displayLoggedOut();
+            }
+        };
     </script>
 </body>
 </html>
