@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,  render_template
 import sqlite3
 import hashlib
 
@@ -8,15 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-     return '''
-    <html>
-        <head><title>Welcome</title></head>
-        <body>
-            <h1>Welcome to the Registration and Login Portal!</h1>
-            <p>Use the API endpoints for registration and login.</p>
-        </body>
-    </html>
-    '''
+     return render_template('/templates/index.html')
 
 @app.route('/register', methods=['POST'])
 def register():
