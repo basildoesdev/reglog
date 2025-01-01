@@ -5,6 +5,19 @@ import hashlib
 app = Flask(__name__)
 
 # Register endpoint
+
+@app.route('/')
+def home():
+     return '''
+    <html>
+        <head><title>Welcome</title></head>
+        <body>
+            <h1>Welcome to the Registration and Login Portal!</h1>
+            <p>Use the API endpoints for registration and login.</p>
+        </body>
+    </html>
+    '''
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
